@@ -5,7 +5,7 @@ export const registerUser = createAsyncThunk(
   'auth/registerUser',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', userData)
+      const response = await axios.post('https://backendofl.onrender.com/api/auth/register', userData)
       return response.data
     } catch (error) {
       return rejectWithValue(error.response.data)
@@ -17,7 +17,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async (userData, { rejectWithValue }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', userData)
+      const response = await axios.post('https://backendofl.onrender.com/api/auth/login', userData)
       localStorage.setItem('token', response.data.token)
       return response.data
     } catch (error) {

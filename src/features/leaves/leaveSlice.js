@@ -7,7 +7,7 @@ const getAuthHeaders = () => ({
 
 export const fetchLeaves = createAsyncThunk('leaves/fetchLeaves', async (_, { rejectWithValue }) => {
   try {
-    const res = await axios.get('http://localhost:5000/api/leaves', { headers: getAuthHeaders() })
+    const res = await axios.get('https://backendofl.onrender.com/api/leaves', { headers: getAuthHeaders() })
     return res.data
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to fetch leaves')
@@ -16,7 +16,7 @@ export const fetchLeaves = createAsyncThunk('leaves/fetchLeaves', async (_, { re
 
 export const applyLeave = createAsyncThunk('leaves/applyLeave', async (data, { rejectWithValue }) => {
   try {
-    const res = await axios.post('http://localhost:5000/api/leaves', data, { headers: getAuthHeaders() })
+    const res = await axios.post('https://backendofl.onrender.com/api/leaves', data, { headers: getAuthHeaders() })
     return res.data
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to apply leave')
@@ -25,7 +25,7 @@ export const applyLeave = createAsyncThunk('leaves/applyLeave', async (data, { r
 
 export const cancelLeave = createAsyncThunk('leaves/cancelLeave', async (id, { rejectWithValue }) => {
   try {
-    const res = await axios.delete(`http://localhost:5000/api/leaves/${id}`, { headers: getAuthHeaders() })
+    const res = await axios.delete(`https://backendofl.onrender.com/api/leaves/${id}`, { headers: getAuthHeaders() })
     return res.data
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Failed to cancel leave')

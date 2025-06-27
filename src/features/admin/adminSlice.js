@@ -15,7 +15,7 @@ export const fetchAllLeaves = createAsyncThunk(
   async ({ employee, status, search }, { rejectWithValue, dispatch }) => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/admin/leaves?employee=${employee}&status=${status}&search=${search}`,
+        `https://backendofl.onrender.com/api/admin/leaves?employee=${employee}&status=${status}&search=${search}`,
         { headers: getAuthHeaders() }
       )
       return res.data
@@ -34,7 +34,7 @@ export const updateLeaveStatus = createAsyncThunk(
   async ({ id, status }, { rejectWithValue, dispatch }) => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/admin/leaves/${id}/status`,
+        `https://backendofl.onrender.com/api/admin/leaves/${id}/status`,
         { status },
         { headers: getAuthHeaders() }
       )
