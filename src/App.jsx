@@ -15,32 +15,30 @@ function ProtectedRoute({ children, allowedRoles }) {
 
 function App() {
   return (
-    <div className="scale-[0.9] origin-top-left"> {/* ↓ Scale wrapper for entire app */}
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/login" element={<Login setIsLogin={() => {}} defaultRole="employee" setRole={() => {}} />} />
-          <Route path="/register" element={<Register setIsLogin={() => {}} defaultRole="employee" setRole={() => {}} />} />
-          <Route
-            path="/employee"
-            element={
-              <ProtectedRoute allowedRoles={['employee']}>
-                <EmployeeDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    </div>
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/login" element={<Login setIsLogin={() => {}} defaultRole="employee" setRole={() => {}} />} />
+        <Route path="/register" element={<Register setIsLogin={() => {}} defaultRole="employee" setRole={() => {}} />} />
+        <Route
+          path="/employee"
+          element={
+            <ProtectedRoute allowedRoles={['employee']}>
+              <EmployeeDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   )
 }
 
