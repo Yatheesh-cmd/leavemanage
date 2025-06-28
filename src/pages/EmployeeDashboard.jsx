@@ -10,7 +10,7 @@ function EmployeeDashboard() {
   const { user } = useSelector((state) => state.auth)
   const { leaves, status } = useSelector((state) => state.leaves)
   const dispatch = useDispatch()
-  const { register, handleSubmit, reset, watch, setError, clearErrors, formState: { errors, isValid } } = useForm({ mode: 'onChange' })
+  const { register, handleSubmit, reset, watch, formState: { errors, isValid } } = useForm({ mode: 'onChange' })
   const [selectedLeave, setSelectedLeave] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [localLeaves, setLocalLeaves] = useState(leaves)
@@ -45,46 +45,6 @@ function EmployeeDashboard() {
     const diffTime = Math.abs(to - from)
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
   }
-
-  // Validate dates in real-time using form validation
-  useEffect(() => {
-    if (fromDate && toDate) {
-      const leaveDays = calculateLeaveDays(fromDate, toDate)
-      const currentYear = new Date().getFullYear()
-      const todayDate = new Date(today)
-      const selectedFromDate = new Date(fromDate)
-      const selectedToDate = new Date(toDate)
-
-      // Check if dates are in the past
-      if (selectedFromDate < todayDate) {
-        setError('fromDate', {
-          type: 'manual',
-          message: 'From Date cannot be before today'
-        })
-      } else if (selectedToDate < todayDate) {
-        setError('toDate', {
-          type: 'manual',
-          message: 'To Date cannot be before today'
-        })
-      } else if (leaveDays > 20) {
-        setError('fromDate', {
-          type: 'manual',
-          message: `Leave duration cannot exceed 20 days (requested: ${leaveDays} days)`
-        })
-        setError('toDate', { type: 'manual', message: '' })
-      } else if (yearlyLeaveDays + leaveDays > 20) {
-        setError('fromDate', {
-          type: 'manual',
-          message: `Total leave exceeds 20 days/year. Used: ${yearlyLeaveDays} days, Remaining: ${20 - yearlyLeaveDays} days`
-        })
-        setError('toDate', { type: 'manual', message: '' })
-      } else {
-        clearErrors(['fromDate', 'toDate'])
-      }
-    } else {
-      clearErrors(['fromDate', 'toDate'])
-    }
-  }, [fromDate, toDate, yearlyLeaveDays, setError, clearErrors])
 
   const onSubmit = async (data) => {
     try {
@@ -248,7 +208,7 @@ function EmployeeDashboard() {
                   )}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">To Date</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1"> To Date</label>
                   <input
                     type="date"
                     {...register('toDate', { required: 'To Date is required' })}
