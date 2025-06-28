@@ -10,11 +10,10 @@ function EmployeeDashboard() {
   const { user } = useSelector((state) => state.auth)
   const { leaves, status } = useSelector((state) => state.leaves)
   const dispatch = useDispatch()
-  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm()
+  const { register, handleSubmit, reset, watch, setError, clearErrors, formState: { errors, isValid } } = useForm({ mode: 'onChange' })
   const [selectedLeave, setSelectedLeave] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [localLeaves, setLocalLeaves] = useState(leaves)
-  const [dateError, setDateError] = useState('') // State for date validation error
   const [yearlyLeaveDays, setYearlyLeaveDays] = useState(0) // State for total approved leave days
 
   useEffect(() => {
@@ -44,39 +43,33 @@ function EmployeeDashboard() {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1
   }
 
-  // Validate dates in real-time
+  // Validate dates in real-time using form validation
   useEffect(() => {
     if (fromDate && toDate) {
       const leaveDays = calculateLeaveDays(fromDate, toDate)
       const currentYear = new Date().getFullYear()
-      
+
       if (leaveDays > 20) {
-        setDateError(`Leave duration cannot exceed 20 days (requested: ${leaveDays} days)`)
+        setError('fromDate', {
+          type: 'manual',
+          message: `Leave duration cannot exceed 20 days (requested: ${leaveDays} days)`
+        })
+        setError('toDate', { type: 'manual', message: '' }) // Ensure toDate is marked invalid
       } else if (yearlyLeaveDays + leaveDays > 20) {
-        setDateError(`Total leave exceeds 20 days/year. Used: ${yearlyLeaveDays} days, Remaining: ${20 - yearlyLeaveDays} days`)
+        setError('fromDate', {
+          type: 'manual',
+          message: `Total leave exceeds 20 days/year. Used: ${yearlyLeaveDays} days, Remaining: ${20 - yearlyLeaveDays} days`
+        })
+        setError('toDate', { type: 'manual', message: '' })
       } else {
-        setDateError('')
+        clearErrors(['fromDate', 'toDate'])
       }
     } else {
-      setDateError('')
+      clearErrors(['fromDate', 'toDate'])
     }
-  }, [fromDate, toDate, yearlyLeaveDays])
+  }, [fromDate, toDate, yearlyLeaveDays, setError, clearErrors])
 
   const onSubmit = async (data) => {
-    const leaveDays = calculateLeaveDays(data.fromDate, data.toDate)
-    const currentYear = new Date().getFullYear()
-
-    // Double-check validation
-    if (leaveDays > 20) {
-      toast.error(`Leave duration cannot exceed 20 days (requested: ${leaveDays} days)`)
-      return
-    }
-
-    if (yearlyLeaveDays + leaveDays > 20) {
-      toast.error(`Total leave exceeds 20 days/year. Used: ${yearlyLeaveDays} days, Remaining: ${20 - yearlyLeaveDays} days`)
-      return
-    }
-
     try {
       await dispatch(applyLeave(data)).unwrap()
       toast.success('Leave applied successfully')
@@ -243,10 +236,6 @@ function EmployeeDashboard() {
                 </div>
               </div>
               
-              {dateError && (
-                <p className="text-sm text-red-600">{dateError}</p>
-              )}
-              
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Leave Type</label>
                 <select
@@ -257,6 +246,7 @@ function EmployeeDashboard() {
                   <option value="casual">Casual Leave</option>
                   <option value="annual">Annual Leave</option>
                 </select>
+                {errors.type && <p className="mt-1 text-sm text-red-600">{errors.type.message}</p>}
               </div>
               
               <div>
@@ -267,13 +257,13 @@ function EmployeeDashboard() {
                   rows="3"
                   placeholder="Briefly explain the reason for your leave"
                 ></textarea>
-                {errors.reason && <p className="mt-1 text-sm text-red-600">{errors.reason.message}</p>}
+                {errorsreason && <p className="mt-1 text-sm text-red-600">{errors.reason.message}</p>}
               </div>
               
               <button
                 type="submit"
                 className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-lg transition flex items-center justify-center gap-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                disabled={status === 'loading' || !!dateError}
+                disabled={status === 'loading' || !isValid}
               >
                 {status === 'loading' ? (
                   <>
@@ -348,7 +338,7 @@ function EmployeeDashboard() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <h3 className="mt-2 text-lg font-medium text-slate-900">No leave history</h3>
-                <p className="mt-1 text-slate-500">You haven't applied for any leaves yet.</p>
+                <p className="mt-1 text-sm text-slate-500">You haven't applied for any leaves yet.</p>
               </div>
             )}
           </div>
