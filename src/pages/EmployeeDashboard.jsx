@@ -257,7 +257,7 @@ function EmployeeDashboard() {
                   rows="3"
                   placeholder="Briefly explain the reason for your leave"
                 ></textarea>
-                {errorsreason && <p className="mt-1 text-sm text-red-600">{errors.reason.message}</p>}
+                {errors.reason && <p className="mt-1 text-sm text-red-600">{errors.reason.message}</p>}
               </div>
               
               <button
