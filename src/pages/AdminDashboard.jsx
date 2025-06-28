@@ -53,7 +53,7 @@ function AdminDashboard() {
     const from = new Date(fromDate)
     const to = new Date(toDate)
     const diffTime = Math.abs(to - from)
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 // Including both start and end dates
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1 
   }
 
   return (

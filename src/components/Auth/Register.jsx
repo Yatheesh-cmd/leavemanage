@@ -103,7 +103,7 @@ function Register({ setIsLogin, defaultRole, setRole }) {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input type="hidden" {...register('role')} />
 
-            {/* Full Name */}
+           
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
               <input
@@ -133,7 +133,7 @@ function Register({ setIsLogin, defaultRole, setRole }) {
               {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
             </div>
 
-            {/* Password */}
+         
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Password</label>
               <input
@@ -151,7 +151,7 @@ function Register({ setIsLogin, defaultRole, setRole }) {
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
             </div>
 
-            {/* Confirm Password */}
+         
             <div>
               <label className="block text-sm font-medium text-slate-700 mb-2">Confirm Password</label>
               <input
@@ -167,8 +167,6 @@ function Register({ setIsLogin, defaultRole, setRole }) {
                 <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
               )}
             </div>
-
-            {/* Submit */}
             <button
               type="submit"
               className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-4 rounded-lg font-medium transition flex items-center justify-center gap-2"

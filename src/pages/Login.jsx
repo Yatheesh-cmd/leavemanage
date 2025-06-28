@@ -4,7 +4,7 @@ import Register from '../components/Auth/Register'
 
 function RegisterPage() {
   const [isLogin, setIsLogin] = useState(false)
-  const [role, setRole] = useState('employee') // Track selected role
+  const [role, setRole] = useState('employee') 
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
