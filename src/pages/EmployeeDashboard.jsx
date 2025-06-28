@@ -14,7 +14,10 @@ function EmployeeDashboard() {
   const [selectedLeave, setSelectedLeave] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [localLeaves, setLocalLeaves] = useState(leaves)
-  const [yearlyLeaveDays, setYearlyLeaveDays] = useState(0) // State for total approved leave days
+  const [yearlyLeaveDays, setYearlyLeaveDays] = useState(0) 
+
+  // Get current date in YYYY-MM-DD format for min attribute
+  const today = new Date().toISOString().split('T')[0]
 
   useEffect(() => {
     dispatch(fetchLeaves())
@@ -48,13 +51,29 @@ function EmployeeDashboard() {
     if (fromDate && toDate) {
       const leaveDays = calculateLeaveDays(fromDate, toDate)
       const currentYear = new Date().getFullYear()
+      const todayDate = new Date(today)
+      const selectedFromDate = new Date(fromDate)
+      const selectedToDate = new Date(toDate)
 
-      if (leaveDays > 20) {
+      // Check if dates are in the past
+      if (selectedFromDate < todayDate) {
+        setError('fromDate', {
+          type: 'manual',
+          message: 'From Date cannot be in the past'
+        })
+        setError('toDate', { type: 'manual', message: '' })
+      } else if (selectedToDate < todayDate) {
+        setError('toDate', {
+          type: 'manual',
+          message: 'To Date cannot be in the past'
+        })
+        setError('fromDate', { type: 'manual', message: '' })
+      } else if (leaveDays > 20) {
         setError('fromDate', {
           type: 'manual',
           message: `Leave duration cannot exceed 20 days (requested: ${leaveDays} days)`
         })
-        setError('toDate', { type: 'manual', message: '' }) // Ensure toDate is marked invalid
+        setError('toDate', { type: 'manual', message: '' })
       } else if (yearlyLeaveDays + leaveDays > 20) {
         setError('fromDate', {
           type: 'manual',
@@ -221,6 +240,7 @@ function EmployeeDashboard() {
                   <input
                     type="date"
                     {...register('fromDate', { required: 'From Date is required' })}
+                    min={today}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                   />
                   {errors.fromDate && <p className="mt-1 text-sm text-red-600">{errors.fromDate.message}</p>}
@@ -230,6 +250,7 @@ function EmployeeDashboard() {
                   <input
                     type="date"
                     {...register('toDate', { required: 'To Date is required' })}
+                    min={today}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
                   />
                   {errors.toDate && <p className="mt-1 text-sm text-red-600">{errors.toDate.message}</p>}
