@@ -14,7 +14,7 @@ function EmployeeDashboard() {
   const [selectedLeave, setSelectedLeave] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [localLeaves, setLocalLeaves] = useState(leaves)
-  const [yearlyLeaveDays, setYearlyLeaveDays] = useState(0) 
+  const [yearlyLeaveDays, setYearlyLeaveDays] = useState(0)
 
   // Get current date in YYYY-MM-DD format for min attribute
   const today = new Date().toISOString().split('T')[0]
@@ -59,15 +59,13 @@ function EmployeeDashboard() {
       if (selectedFromDate < todayDate) {
         setError('fromDate', {
           type: 'manual',
-          message: 'From Date cannot be in the past'
+          message: 'From Date cannot be before today'
         })
-        setError('toDate', { type: 'manual', message: '' })
       } else if (selectedToDate < todayDate) {
         setError('toDate', {
           type: 'manual',
-          message: 'To Date cannot be in the past'
+          message: 'To Date cannot be before today'
         })
-        setError('fromDate', { type: 'manual', message: '' })
       } else if (leaveDays > 20) {
         setError('fromDate', {
           type: 'manual',
@@ -241,9 +239,13 @@ function EmployeeDashboard() {
                     type="date"
                     {...register('fromDate', { required: 'From Date is required' })}
                     min={today}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition ${
+                      errors.fromDate ? 'border-red-500' : 'border-slate-300'
+                    }`}
                   />
-                  {errors.fromDate && <p className="mt-1 text-sm text-red-600">{errors.fromDate.message}</p>}
+                  {errors.fromDate && (
+                    <p className="mt-1 text-sm text-red-600">{errors.fromDate.message}</p>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">To Date</label>
@@ -251,9 +253,13 @@ function EmployeeDashboard() {
                     type="date"
                     {...register('toDate', { required: 'To Date is required' })}
                     min={today}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
+                    className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition ${
+                      errors.toDate ? 'border-red-500' : 'border-slate-300'
+                    }`}
                   />
-                  {errors.toDate && <p className="mt-1 text-sm text-red-600">{errors.toDate.message}</p>}
+                  {errors.toDate && (
+                    <p className="mt-1 text-sm text-red-600">{errors.toDate.message}</p>
+                  )}
                 </div>
               </div>
               
@@ -261,7 +267,9 @@ function EmployeeDashboard() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Leave Type</label>
                 <select
                   {...register('type', { required: 'Leave Type is required' })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition ${
+                    errors.type ? 'border-red-500' : 'border-slate-300'
+                  }`}
                 >
                   <option value="sick">Sick Leave</option>
                   <option value="casual">Casual Leave</option>
@@ -274,7 +282,9 @@ function EmployeeDashboard() {
                 <label className="block text-sm font-medium text-slate-700 mb-1">Reason</label>
                 <textarea
                   {...register('reason', { required: 'Reason is required' })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition"
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition ${
+                    errors.reason ? 'border-red-500' : 'border-slate-300'
+                  }`}
                   rows="3"
                   placeholder="Briefly explain the reason for your leave"
                 ></textarea>
